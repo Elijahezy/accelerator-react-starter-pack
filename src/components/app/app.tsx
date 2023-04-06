@@ -6,6 +6,7 @@ import { lazy } from 'react';
 import { AppRoute } from '../consts/app';
 import NotFoundScreen from '../notfoundscreen/not-found-screen';
 import Cart from '../cart/cart';
+import LoadingSpinner from "../loading-spinner/loading-spinner";
 const MainPage = lazy(() => import('../main/main'));
 const ProductMain = lazy(() => import('../product/product'));
 const browserHistory = createBrowserHistory();
@@ -13,7 +14,7 @@ const browserHistory = createBrowserHistory();
 function App(): JSX.Element {
   return (
     <Router history={browserHistory}>
-      <Suspense fallback={<h1>Loading Data...</h1>}>
+      <Suspense fallback={<LoadingSpinner />}>
         <Switch >
           <Route exact path={AppRoute.Main}>
             <MainPage />

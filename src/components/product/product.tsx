@@ -15,6 +15,7 @@ import ru from 'dayjs/locale/ru';
 import AddToCart from '../modals/add-to-cart/add-to-cart';
 import AddToCartSuccess from '../modals/add-to-cart-success/add-to-cart-success';
 import { EMPTY_GUITAR } from '../consts/consts';
+import LoadingSpinner from "../loading-spinner/loading-spinner";
 import('dayjs/plugin/weekday');
 dayjs.locale('ru');
 
@@ -35,6 +36,7 @@ function Product(): JSX.Element {
 
   const [isAddToCartModal, setIsAddToCartModal] = useState(false);
   const [isAddToCartSuccessModal, setIsAddToCartSuccessModal] = useState(false);
+  const [isLoading, setLoading] = useState(true);
 
   const handleShowMoreButton = () => {
     setCommentAmount(commentAmount + 1);
@@ -44,6 +46,9 @@ function Product(): JSX.Element {
     setLastContentIndex(commentAmount * COMMENT_PER_UNIT);
   }, [commentAmount]);
 
+  useEffect(() => {
+    if (product !== undefined) return setLoading(false)
+  }, [product])
   return (
     <>
       <Header />
@@ -58,7 +63,17 @@ function Product(): JSX.Element {
             <li className="breadcrumbs__item"><a className="link" href='/'>{product?.name}</a>
             </li>
           </ul>
-          <div className="product-container"><img className="product-container__img" src={`/${product?.previewImg}`} width="90" height="235" alt="" />
+          <div className="product-container">
+            {
+              isLoading ?
+                <div style={{width: '220px', height: '0px', position: 'relative', marginRight: '20px'}}>
+                  <LoadingSpinner />
+                </div>
+                :
+                <img className="product-container__img" src={`/${product?.previewImg}`} width="90" height="235" alt="" />
+
+            }
+
             <div className="product-container__info-wrapper">
               <h2 className="product-container__title title title--big title--uppercase">{product?.name}</h2>
               <div className="rate product-container__rating" aria-hidden="true"><span className="visually-hidden">Рейтинг:</span>

@@ -12,6 +12,7 @@ import Pagination from '../pagination/pagination';
 import AddToCart from '../modals/add-to-cart/add-to-cart';
 import AddToCartSuccess from '../modals/add-to-cart-success/add-to-cart-success';
 import { EMPTY_GUITAR } from '../consts/consts';
+import LoadingSpinner from "../loading-spinner/loading-spinner";
 
 const CataloFilterPage = React.lazy(() => import('../catalog-filters/catalog-filter'));
 
@@ -22,6 +23,8 @@ function Main(): JSX.Element {
   const sortedGuitars = useSelector<State, Guitar[]>((state) => state.sortedGuitars);
   const filterState = useSelector<State, FilterState>((state) => state.filterState);
   const comments = useSelector<State, Comment[]>((state) => state.comments);
+  const guitars = useSelector<State, Guitar[]>((state) => state.guitars);
+  const [isLoading, setLoading] = useState(true)
 
   const [isSortedByPrice, setSortedByPrice] = useState(false);
   const [isSortedByRaiting, setSortedByRaiting] = useState(false);
@@ -44,6 +47,12 @@ function Main(): JSX.Element {
     }
 
   }, [dispatch, isSortedByPrice, isSortedByRaiting, isSortedFromHighToLow, isSortedFromLowToHigh]);
+
+  useEffect(() => {
+    if (guitars.length !== 0) {
+      setLoading(false);
+    }
+  }, [guitars])
 
 
   return (
@@ -106,6 +115,8 @@ function Main(): JSX.Element {
             </div>
             <div className="cards catalog__cards">
               {
+                isLoading ?
+                  <LoadingSpinner /> :
                 memorizedGuitars.slice(filterState.pagination[0], filterState.pagination[1])
               }
 
